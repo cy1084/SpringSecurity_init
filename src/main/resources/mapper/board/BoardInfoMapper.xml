@@ -1,0 +1,63 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.secu.board.mapper.BoardInfoMapper">
+	<insert id="insertBoardInfo" useGeneratedKeys="true" keyColumn="BI_NUM" keyProperty="biNum">
+		INSERT INTO BOARD_INFO(
+			BI_TITLE, BI_CONTENT, BI_FILE_PATH, BI_FILE_NAME,
+			UI_NUM
+		)
+		VALUES(
+			#{biTitle}, #{biContent}, #{biFilePath}, #{biFileName},
+			#{uiNum}
+		)
+	</insert>
+	<select id="selectBoardInfo" resultType="com.test.secu.board.vo.BoardInfoVO">
+		SELECT BI_NUM, BI_TITLE, BI_CONTENT, UI_NUM, 
+		BI_FILE_PATH, BI_FILE_NAME, CREDAT, CRETIM, 
+		LMODAT, LMOTIM
+		FROM BOARD_INFO
+		WHERE BI_NUM=#{biNum}
+	</select>
+	
+	<select id="selectBoardInfos" resultType="com.test.secu.board.vo.BoardInfoVO">
+		SELECT BI.BI_NUM, BI.BI_TITLE, BI.UI_NUM, UI.UI_NAME, 
+			DATE_FORMAT(BI.CREDAT,'%Y-%m-%d') CREDAT, DATE_FORMAT(STR_TO_DATE(BI.CRETIM,'%h%i%s'),'%h:%i:%s') CRETIM,
+			BI.BI_FILE_NAME
+		FROM BOARD_INFO BI
+		INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+		<where>
+			<if test='biTitle != null and biTitle != ""'>
+				BI_TITLE LIKE CONCAT('%', #{biTitle},'%')
+			</if>
+		</where>
+		ORDER BY BI_NUM DESC
+		LIMIT #{start}, #{end}
+	</select>
+	
+	<select id="selectBoardInfoCnt" resultType="int">
+		SELECT count(*)
+		FROM BOARD_INFO BI
+		<where>
+			<if test='biTitle != null and biTitle != ""'>
+				BI_TITLE LIKE CONCAT('%', #{biTitle},'%')
+			</if>
+		</where>
+		INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+	</select>
+	
+	
+	<select id="selectBoardInfoWithHelper" resultType="com.test.secu.board.vo.BoardInfoVO">
+		SELECT BI.BI_NUM, BI.BI_TITLE, BI.UI_NUM, UI.UI_NAME, 
+			DATE_FORMAT(BI.CREDAT,'%Y-%m-%d') CREDAT, DATE_FORMAT(STR_TO_DATE(BI.CRETIM,'%h%i%s'),'%h:%i:%s') CRETIM,
+			BI.BI_FILE_NAME
+		FROM BOARD_INFO BI
+		INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+		<where>
+			<if test='biTitle != null and biTitle != ""'>
+				BI_TITLE LIKE CONCAT('%', #{biTitle},'%')
+			</if>
+		</where>
+		ORDER BY BI_NUM DESC
+	</select>
+	
+</mapper>

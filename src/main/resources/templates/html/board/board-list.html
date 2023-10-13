@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="text" id="biTitle"><button onclick="getBoards()">검색</button>
+	<table border="1">
+		<tr>
+			<th>번호</th>
+			<th>제목</th>
+			<th>작성자</th>
+			<th>파일</th>
+			<th>등록일</th>
+			<th>등록시간</th>
+		</tr>
+		<tbody id="tBody"></tbody>
+	</table>
+	<div id="pageDiv">
+	</div>
+	<a href="/html/board/board-add">등록</a>
+	
+	<script>
+		let total=0;
+		let pageSize=5;
+		const blockSize=10;
+		const getBoards=async function(evt,page){
+		if(!page){
+				page = 1;
+			}
+			let url=`/board-infos?page=${page}&pageSize=${pageSize}`;
+			url+=`&biTitle=${document.querySelector('#biTitle').value}`;
+			
+			const res = await fetch(url);
+			const json = await res.json();
+			const totalCnt = json.totalCnt; //101
+			const pageBlock = Math.ceil(totalCnt/pageSize); //21
+			let pageHtml = '';
+			
+			
+			const startBlock=(Math.ceil(page/blockSize)-1)*blockSize+1;//1
+			let endBlock=startBlock+blockSize-1;//10
+			if(endBlock>pageBlock){//10>21
+				endBlock=pageBlock;
+			}
+			if(startBlock!=1){
+				pageHtml+=<a href='#' onclick="getBoards(event, ${startBlock-1})">◀</a>;
+			}
+			for(let i=startBlock;i<=endBlock;i++){
+				pageHtml += `<a href="#" onclick="getBoards(event,${i})"><b>[ ${i} ]</b></a>`;
+			}
+			if(endBlock<pageBlock){//10<=21
+				pageHtml+=<a href='#' onclick="getBoards(event, $endBlock+1})">▶</a>;
+			}
+			
+			document.querySelector('#pageDiv').innerHTML = pageHtml;
+			let html = '';
+			for(const board of json.list){
+				html += `<tr>`;
+				html += `<td>${board.biNum}</td>`;
+				html += `<td><a href="/html/board/board-view?biNum=${board.biNum}">${board.biTitle}</a></td>`;
+				html += `<td>${board.uiName}</td>`;
+				html += `<td>${board.biFileName?'<img src="/imgs/file.jpg" width="30">':''}</td>`;
+				html += `<td>${board.credat}</td>`;
+				html += `<td>${board.cretim}</td>`;
+				html += `</tr>`;
+			}
+			document.querySelector('#tBody').innerHTML = html;
+		}
+		window.addEventListener('load',getBoards);
+	</script>
+	
+
+</body>
+</html>
