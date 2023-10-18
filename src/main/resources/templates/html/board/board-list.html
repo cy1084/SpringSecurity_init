@@ -29,7 +29,7 @@
 		if(!page){
 				page = 1;
 			}
-			let url=`/board-infos?page=${page}&pageSize=${pageSize}`;
+			let url=`/board-infos/helper?page=${page}&pageSize=${pageSize}`;
 			url+=`&biTitle=${document.querySelector('#biTitle').value}`;
 			
 			const res = await fetch(url);
