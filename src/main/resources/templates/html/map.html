@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script src="/js/postcode.v2.js"></script>
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=580feadc23423aded5be1964b0e81833"></script>
+</head>
+
+<body>
+	<input type="text" id="postcode"><button onclick="openDaum()">주소 찾기</button>
+	<input type="text" id="roadAddress"><input type="text" id="jibunAddress"><br>
+	<input type="text" id="sido"><input type="text" id="sigungu"><input type="text" id="bname">
+	<input type="text" id="address2">
+	<div id="map" style="width:500px;height:400px;"></div>
+
+	<script>
+		window.addEventListener('load', function () {
+			var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+			var options = { //지도를 생성할 때 필요한 기본 옵션
+				center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+				level: 3 //지도의 레벨(확대, 축소 정도)
+			};
+
+			var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+			map.addOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW); 
+		})
+		
+		function openDaum() {
+			new daum.Postcode({
+				oncomplete: function (data) {
+					//팝업에서 검색 결과 항목을 클릭했을 때 실행할 코드 작성 부분
+
+
+					/*
+					data.addressType
+					data.jibunAddress
+					data.bname
+					data.roadAddress
+					data.roadname
+					data.sido
+					data.sigungu
+					data.zonecode
+					*/
+
+					for (const key in data) {
+						if (document.querySelector(`#${key}`)) {
+							document.querySelector(`#${key}`).value = data[key];
+						}
+					}
+				}
+			}).open();
+		}
+	</script>
+</body>
+
+</html>

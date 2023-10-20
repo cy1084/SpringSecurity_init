@@ -18,13 +18,13 @@ public class SecurityBeanConfig {
 	WebSecurityCustomizer webSecurityCustomizer() {
 		return web->{
 			web.ignoring()
-			.antMatchers("/css/**","/js/**","/imgs/**","/resources/**");
+			.antMatchers("/css/**","/js/**","/imgs/**","/resources/**","/tui/**");
 		};
 	}
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity hs) throws Exception{
 		hs.authorizeRequests(req->req
-				.antMatchers("/login","/join","/html/join","/html/login","/")
+				.antMatchers("/login","/join","/html/join","/html/login","/","/html/calendar")
 				.permitAll()
 				.antMatchers("/html/admin/**").hasRole("ADMIN")
 				.antMatchers("/html/user/**").hasRole("USER")
