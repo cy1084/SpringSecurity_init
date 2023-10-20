@@ -24,8 +24,10 @@ public class SecurityBeanConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity hs) throws Exception{
 		hs.authorizeRequests(req->req
-				.antMatchers("/login","/join","/html/join","/html/login")
+				.antMatchers("/login","/join","/html/join","/html/login","/")
 				.permitAll()
+				.antMatchers("/html/admin/**").hasRole("ADMIN")
+				.antMatchers("/html/user/**").hasRole("USER")
 				.anyRequest().authenticated())
 		.formLogin(formLogin->formLogin
 				.loginPage("/html/login")
@@ -34,7 +36,11 @@ public class SecurityBeanConfig {
 				.loginProcessingUrl("/login")
 				.defaultSuccessUrl("/") //로그인 성공 시 인덱스 화면으로
 				.failureUrl("/html/login-fail"))
+		.logout(logout->logout
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/html/login"))	//로그아웃 성공 시 로그인 화면으로 
 		.csrf(csrf->csrf.disable())
+		.exceptionHandling(handling->handling.accessDeniedPage("/html/denied"))
 		.userDetailsService(userService);
 		
 		return hs.build();

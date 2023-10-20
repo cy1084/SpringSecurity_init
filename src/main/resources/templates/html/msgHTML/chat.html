@@ -1,40 +1,53 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
 </head>
+
 <body>
 	<div id="sDiv">
 		<input type="text" id="name"><button onclick="startChat()">확인</button>
 	</div>
-	<div id="chatDiv" style="display: none"></div>
+	<div id="chatDiv" style="display: none">
+		<textarea id="chatContent" style="resize: none" cols="25" rows="10"></textarea><br>
+		<input type="text" id="msg"><button onclick="sendMsg()">send</button>
+	</div>
 	<script>
 		let ws;
+		function sendMsg(){
+			if(document.querySelector('#msg').value.trim){
+				ws.send(document.querySelector('#msg').value);
+			}
+			
+		}
 		//alert(location.host); //메시지를 받는 컴퓨터의 아이피 주소
-		function startChat(){
-			const name=document.querySelector('#name'); //상대방 이름
-			if(name.value.trim()===''){ //중간 공백이 아닌 양쪽 끝 공백만 제거
+		function startChat() {
+			const name = document.querySelector('#name'); //상대방 이름
+			if (name.value.trim() === '') { //중간 공백이 아닌 양쪽 끝 공백만 제거
 				alert('대화명 작성해');
 				return;
 			}
-			ws=new WebSocket(`ws://${location.host}/chat/${name.value.trim()}`);
-			ws.onmessage=function(res){
-				const data=JSON.parse(res.data); //데이터 통신을 json으로 하겠다
-				
-				if(data.errMsg){
+			ws = new WebSocket(`ws://${location.host}/chat/${name.value.trim()}`);
+			ws.onmessage = function (res) {
+				const data = JSON.parse(res.data); //데이터 통신을 json으로 하겠다
+
+				if (data.errMsg) {
 					alert(data.errMsg);
 					return;
 				}
+				document.querySelector('#chatContent').value += data.msg + '/r/n';
 			}
-			ws.onclose=function(){
-				document.querySelector('#sDiv').style.display='';
-				document.querySelector('#chatDiv').style.display='none';
+			ws.onclose = function () {
+				document.querySelector('#sDiv').style.display = '';
+				document.querySelector('#chatDiv').style.display = 'none';
 			}
-			document.querySelector('#sDiv').style.display='none';
-			document.querySelector('#chatDiv').style.display='';
+			document.querySelector('#sDiv').style.display = 'none';
+			document.querySelector('#chatDiv').style.display = '';
 		}
 	</script>
 
 </body>
+
 </html>

@@ -1,8 +1,11 @@
 package com.test.secu.user.vo;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Getter;
@@ -21,6 +24,7 @@ class GrantedAuthority2 implements GrantedAuthority{
 @Setter
 @ToString
 public class UserInfoVO implements UserDetails{
+
 	private int uiNum;
     private String uiName;
     private String uiId;
@@ -28,14 +32,21 @@ public class UserInfoVO implements UserDetails{
     private String uiMobile;
     private String uiEmail;
     private String uiBirth;
+    private String uiRoles;
     private String credat;
     private String lmodat;
     private String active;
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+    
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+    	Collection<GrantedAuthority> roles=new ArrayList<>();
+    	String[] uiRolesArr=uiRoles.split(",");
+    	for(String uiRole:uiRolesArr) {
+    		roles.add(new SimpleGrantedAuthority(uiRole));
+    	}
+		return roles;
 	}
+	
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub

@@ -16,13 +16,13 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.secu.common.vo.ChatVO;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 @Component
 @ServerEndpoint("/chat/{name}")
@@ -38,12 +38,22 @@ public class WebSocketChat {
 	
 	@OnOpen 
 	public void open(Session session, EndpointConfig ec, @PathParam("name")String name) throws IOException {
+		ChatVO chat=new ChatVO();
 		if(!names.add(name)) {	//중복이라면
-			ChatVO chat=new ChatVO();
+			
 			chat.setErrMsg(name+"은 이미 중복된 이름입니다.");
 			sendMsg(session,chat);
 			session.close();
+			return;
 		}
+		
+		chat.setMsg(name+"님이 입장하셨습니다.");
+		Iterator<String> it=sessionMap.keySet().iterator();
+		while(it.hasNext()) {		
+				Session targetSession=sessionMap.get(it.next());
+				sendMsg(targetSession,chat);
+		}
+		
 		sessionMap.put(session.getId(), session);
 		log.info("open sessionMap=>{}",sessionMap);
 	}
@@ -59,8 +69,11 @@ public class WebSocketChat {
 
 	
 	@OnMessage
-	public void msg(String msg, Session session) throws IOException {
+	public void msg(String msg, Session session, @PathParam("name")String name) throws IOException {
 		Iterator<String> it=sessionMap.keySet().iterator();
+		ChatVO chat = new ChatVO();
+		chat.setName(name);
+		chat.setMsg(msg);
 		while(it.hasNext()) {
 			String key=it.next();
 			if(!key.equals(session.getId())) {
@@ -71,7 +84,8 @@ public class WebSocketChat {
 	}
 	
 	@OnClose
-	public void close(Session session) {
+	public void close(Session session, EndpointConfig ec, @PathParam("name")String name) {
+		names.remove(name);
 		sessionMap.remove(session.getId());
 		log.info("close sessionMap=>{}",sessionMap);
 	}
