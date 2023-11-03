@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		function obj(){
+			this.name='홍길동';
+			this.age='22';
+			this.sleep=function(){
+				alert(this.name+'님이 잡니다.');
+			}
+		}
+		
+		const o1=obj; 	//obj라는 function 대입
+		const o2=obj(); //obj의 실행 결과 대입 -> function obj()에서 return 안했으므로 o2의 데이터 타입은 undefined
+		
+		const o=new obj();
+		//obj 새로 생성
+		o.name+='님'; 	//홍길동님
+		o.sleep(); 		//홍길동님이 잡니다.
+	</script>
+
+</body>
+</html>

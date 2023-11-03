@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		for(let i=1;i<=10;i++){
+			console.log(i);
+		}
+		
+		let i=1;
+		while(i<=10){
+			console.log(i);
+		}
+		
+		i=1;
+		do{
+			console.log(i++);
+		}while(i<=10);
+		
+		
+		let arr=[1,2,3,4,5];
+		for(let n of arr){	//향상된 for문과 같음
+							//인덱스 상관없이 값 출력
+			console.log(n);
+		}
+		
+		for(let idx in arr){	//인덱스에 따라 출력하고 싶을 때
+			if(idx>2){			//인덱스가 2 초과인 것만 출력
+				console.log(arr[idx]);
+			}
+		}
+	</script>
+
+</body>
+</html>

@@ -18,7 +18,7 @@ public class SecurityBeanConfig {
 	WebSecurityCustomizer webSecurityCustomizer() {
 		return web->{
 			web.ignoring()
-			.antMatchers("/css/**","/js/**","/imgs/**","/resources/**","/tui/**");
+			.antMatchers("/css/**","/js/**","/imgs/**","/resources/**","/tui/**","/test/**","/rest/**","/html/js/**");
 		};
 	}
 	@Bean

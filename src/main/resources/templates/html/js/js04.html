@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		// == => 값만 비교
+		// === => 값과 데이터 타입 비교
+		
+		window===this; //true
+		
+		var obj={
+			name:'홍길동'
+			// 데이터 타입 string
+		};
+		obj.age=22;
+		// 데이터 타입 number
+		
+		// 데이터 타입 function
+		obj['sleep']=function(){	//string으로 추가
+		// = obj.sleep=function(){  //.키 값으로 추가
+			alert(this.name+'님이 잡니다.');
+			//obj===this => true
+		}
+		
+		obj.sleep();  //호출 가능
+		
+		
+		
+	</script>
+
+</body>
+</html>

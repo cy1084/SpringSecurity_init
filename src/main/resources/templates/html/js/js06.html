@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		const _alert=alert;
+		this.alert();	//this==window, alert()는 function
+		this.alert=function(msg){
+			_alert('하고 싶은 말:'+msg);
+		}
+		//function을 바꿀 수도 있음
+		
+		alert('안녕');	//msg에 안녕 들어감
+		
+		
+		//'하고 싶은 말: 안녕'이라고 출력 
+	</script>
+
+</body>
+</html>
